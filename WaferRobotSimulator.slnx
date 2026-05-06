@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="TutorialSandbox/TutorialSandbox.vcxproj" Id="e5ca2c35-16f9-488f-8dbc-6e9fdfaff389" />
+  <Project Path="WaferRobotClient/WaferRobotClient.vcxproj" Id="ff64be53-a2c8-4794-b1f1-7ea9fed4d559" />
+  <Project Path="WaferRobotSimulator/WaferRobotSimulator.vcxproj" Id="ea9641db-d268-424a-bdaf-12df15248382" />
+</Solution>
