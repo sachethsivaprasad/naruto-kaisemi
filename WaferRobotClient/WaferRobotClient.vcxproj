@@ -127,7 +127,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\WaferRobotSimulator\Robot_Client_Dispatcher.cpp" />
+    <ClCompile Include="RobotProtocol.cpp" />
     <ClCompile Include="WaferRobotClient.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RobotClientDispatcher.h" />
+    <ClInclude Include="RobotProtocol.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "RobotProtocol.h" 
+#include "RobotSimDispatcher.h"
 
 using namespace std;
 
@@ -9,7 +10,7 @@ int main()
     cout << "=== WAFER ROBOT SIMULATOR BOOTING  ===" << endl;
 
   
-    string incoming_data_from_outside = "\x01CMD|101|PICK FROM=LPA1 ARM=LOWER|4F\r\n";
+    string incoming_data_from_outside = "\x01" "CMD|101|PICK FROM=LPA1 ARM=LOWER|0C\r\n";
 
     cout << "Waiting for command..." << endl;
 
@@ -25,6 +26,8 @@ int main()
     else {
         cout << "Dropping invalid frame." << endl;
     }
+
+    dispatch_server_frame(received);
 
     return 0;
 }

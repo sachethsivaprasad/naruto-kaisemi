@@ -21,9 +21,15 @@
     <ClCompile Include="RobotProtocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Robot_Sim_Dispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RobotProtocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RobotSimDispatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
