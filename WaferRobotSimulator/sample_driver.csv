@@ -1,0 +1,3 @@
+step,action,delay_ms,notes
+0,LOG_BOOT,0,"Placeholder rows for the upcoming CSV timing engine"
+1,CMD_PLACEHOLDER,150,"Match your virtual COM pairing before expecting motion"

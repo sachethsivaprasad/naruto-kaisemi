@@ -9,13 +9,13 @@ int main()
     cout << "=== WAFER ROBOT SIMULATOR BOOTING ===" << endl;
 
     // In the future, this string will come from the COM Port or the Terminal Input function.
-    // For now, we simulate receiving a string from the "outside".
-    string incoming_data_from_outside = "\x01CMD|101|PICK FROM=LPA1 ARM=LOWER|4F\r\n";
+    // Simulate bytes arriving from UART / virtual COM; exact checksum stays in sync automatically.
+    const std::string incoming_data_from_outside =
+        build_frame("CMD", 101, "PICK FROM=LPA1 ARM=LOWER");
 
     cout << "Waiting for command..." << endl;
 
-    // Call the parser from your new module
-    RobotFrame received = parse_incoming_frame(incoming_data_from_outside);
+    const RobotFrame received = parse_incoming_frame(incoming_data_from_outside);
 
     // Process the result
     if (received.is_valid) {
