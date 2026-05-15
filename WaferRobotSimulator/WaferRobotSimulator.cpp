@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "RobotProtocol.h" 
+#include "../WaferRobotCommon/RobotProtocol.h"
 #include "RobotSimDispatcher.h"
 
 using namespace std;

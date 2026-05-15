@@ -18,13 +18,16 @@
     <ClCompile Include="TutorialSandbox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RobotProtocol.cpp">
+    <ClCompile Include="CommandRegistry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="RobotProtocol.h">
+    <ClInclude Include="CommandRegistry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="commands.csv" />
   </ItemGroup>
 </Project>

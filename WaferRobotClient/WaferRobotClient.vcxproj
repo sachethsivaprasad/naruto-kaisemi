@@ -128,12 +128,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\WaferRobotSimulator\Robot_Client_Dispatcher.cpp" />
-    <ClCompile Include="RobotProtocol.cpp" />
     <ClCompile Include="WaferRobotClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RobotClientDispatcher.h" />
-    <ClInclude Include="RobotProtocol.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WaferRobotCommon\WaferRobotCommon.vcxproj">
+      <Project>{03b29deb-afe7-433b-b076-5a99aae92bb8}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

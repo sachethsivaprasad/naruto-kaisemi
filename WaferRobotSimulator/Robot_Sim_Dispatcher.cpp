@@ -1,6 +1,6 @@
 #include "RobotSimDispatcher.h"
 #include <iostream>
-
+#include "../WaferRobotCommon/RobotProtocol.h"
 using namespace std;
 
 void dispatch_server_frame(RobotFrame frame) {

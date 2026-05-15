@@ -2,8 +2,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include "RobotProtocol.h"
-
+#include "../WaferRobotCommon/RobotProtocol.h"
 using namespace std;
 
 // Frame Builder

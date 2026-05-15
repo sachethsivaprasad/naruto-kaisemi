@@ -1,4 +1,4 @@
 #pragma once
-#include "RobotProtocol.h"
+#include "../WaferRobotClient/RobotClientDispatcher.h"
 
 void dispatch_server_frame(RobotFrame frame);
