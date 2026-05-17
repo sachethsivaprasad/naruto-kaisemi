@@ -8,8 +8,8 @@ int main() {
 
     cout << "=== BOOT SEQUENCE ===" << endl;
     // 1. Load the database into RAM
-    if (!registry.load_from_csv("commands.csv")) {
-        cout << "Test aborted: CSV file not found!" << endl;
+    if (!registry.load_from_cfg("robot.cfg")) {
+        cout << "Test aborted: CFG file not found!" << endl;
         return -1;
     }
 
@@ -17,11 +17,19 @@ int main() {
     // User types: PICK FROM=LPA1
     ParsedCommand cmd1;
     cmd1.action = "PICK";
-    cmd1.parameters["FROM"] = "LPA1";
+    cmd1.parameters["FROM"] = "LPA2";
+    cmd1.parameters["ARM"] = "LOWER";
+
 
     cout << "\n--- Test 1: Perfect Command ---" << endl;
-    if (registry.validate_command(cmd1)) cout << "RESULT: ACCEPTED (Passed)\n";
-    else cout << "RESULT: REJECTED (Failed)\n";
+    if (registry.validate_syntax(cmd1))
+    {
+        if (registry.validate_constraints(cmd1)) cout << "RESULT: ACCEPTED (Passed)\n";
+	    else cout << "RESULT: REJECTED Hardware Constraint Failed (Failed)\n";
+    }
+    else cout << "RESULT: REJECTED Command Error (Failed)\n";
+
+	
 
 
     // --- SCENARIO 2: Missing Required Parameter ---
@@ -31,8 +39,12 @@ int main() {
     cmd2.parameters["ARM"] = "LOWER";
 
     cout << "\n--- Test 2: Missing Parameter ---" << endl;
-    if (registry.validate_command(cmd2)) cout << "RESULT: ACCEPTED (Failed)\n";
-    else cout << "RESULT: REJECTED (Passed)\n";
+    if (registry.validate_syntax(cmd2))
+    {
+        if (registry.validate_constraints(cmd2)) cout << "RESULT: ACCEPTED (Passed)\n";
+        else cout << "RESULT: REJECTED Hardware Constraint Failed (Failed)\n";
+    }
+    else cout << "RESULT: REJECTED Command Error (Failed)\n";
 
 
     // --- SCENARIO 3: Unknown Action ---
@@ -42,8 +54,12 @@ int main() {
     cmd3.parameters["SPEED"] = "FAST";
 
     cout << "\n--- Test 3: Unknown Action ---" << endl;
-    if (registry.validate_command(cmd3)) cout << "RESULT: ACCEPTED (Failed)\n";
-    else cout << "RESULT: REJECTED (Passed)\n";
+    if (registry.validate_syntax(cmd3))
+    {
+        if (registry.validate_constraints(cmd3)) cout << "RESULT: ACCEPTED (Passed)\n";
+        else cout << "RESULT: REJECTED Hardware Constraint Failed (Failed)\n";
+    }
+    else cout << "RESULT: REJECTED Command Error (Failed)\n";
 
 
     // --- SCENARIO 4: Extra Optional Parameters ---
@@ -59,8 +75,12 @@ int main() {
     cmd4.parameters["SPEED"] = "FAST";
 
     cout << "\n--- Test 4: Extra Optional Params ---" << endl;
-    if (registry.validate_command(cmd4)) cout << "RESULT: ACCEPTED (Passed)\n";
-    else cout << "RESULT: REJECTED (Failed)\n";
+    if (registry.validate_syntax(cmd4))
+    {
+        if (registry.validate_constraints(cmd4)) cout << "RESULT: ACCEPTED (Passed)\n";
+        else cout << "RESULT: REJECTED Hardware Constraint Failed (Failed)\n";
+    }
+    else cout << "RESULT: REJECTED Command Error (Failed)\n";
 
     return 0;
 }

@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="commands.csv" />
+    <None Include="robot.cfg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WaferRobotCommon\WaferRobotCommon.vcxproj">

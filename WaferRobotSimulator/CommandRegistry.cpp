@@ -20,7 +20,6 @@ ParameterRule CommandRegistry::parse_rule(const string& raw_param) {
     return rule;
 }
 
-// --- STAGE A: THE BOOT LOADER ---
 bool CommandRegistry::load_from_cfg(const string& filename) {
     ifstream file(filename);
     if (!file.is_open()) {
@@ -58,7 +57,6 @@ bool CommandRegistry::load_from_cfg(const string& filename) {
                     req_str = value;
                 }
 
-                // FIXED: We now pass the string through parse_rule() before saving it
                 if (!req_str.empty()) {
                     stringstream req_stream(req_str);
                     string param;
@@ -91,7 +89,6 @@ bool CommandRegistry::load_from_cfg(const string& filename) {
     return true;
 }
 
-// --- STAGE B: TIER 1 SYNTAX VALIDATION (Grammar Only) ---
 bool CommandRegistry::validate_syntax(const ParsedCommand& cmd) {
     if (valid_commands.find(cmd.action) == valid_commands.end()) {
         cout << "[SYNTAX FAILED] Unknown Action: " << cmd.action << endl;
@@ -100,7 +97,6 @@ bool CommandRegistry::validate_syntax(const ParsedCommand& cmd) {
 
     const CommandSignature& rules = valid_commands[cmd.action];
 
-    // Check for missing REQUIRED parameters
     for (const ParameterRule& rule : rules.required) {
         if (cmd.parameters.find(rule.name) == cmd.parameters.end()) {
             cout << "[SYNTAX FAILED] Missing parameter: " << rule.name << endl;
@@ -108,7 +104,6 @@ bool CommandRegistry::validate_syntax(const ParsedCommand& cmd) {
         }
     }
 
-    // Check for ILLEGAL parameters (Typos)
     for (auto const& [user_key, user_value] : cmd.parameters) {
         bool found = false;
         for (const auto& rule : rules.required) if (rule.name == user_key) found = true;
@@ -122,31 +117,24 @@ bool CommandRegistry::validate_syntax(const ParsedCommand& cmd) {
     return true;
 }
 
-// --- STAGE C: TIER 2 DATA-DRIVEN HARDWARE VALIDATION ---
 bool CommandRegistry::validate_constraints(const ParsedCommand& cmd) {
-    // Safety check in case they call this before syntax
     if (valid_commands.find(cmd.action) == valid_commands.end()) return false;
 
     const CommandSignature& rules = valid_commands[cmd.action];
 
-    // Loop through everything the user sent
     for (auto const& [user_key, user_value] : cmd.parameters) {
         string hw_link = "";
 
-        // Look up the hardware link for this parameter
         for (const auto& rule : rules.required) if (rule.name == user_key) hw_link = rule.hardware_link;
         for (const auto& rule : rules.optional) if (rule.name == user_key) hw_link = rule.hardware_link;
 
-        // If this parameter has a hardware link attached to it, check the list!
         if (!hw_link.empty()) {
 
-            // Does the link actually exist in the [HARDWARE] section?
             if (hardware_limits.find(hw_link) == hardware_limits.end()) {
                 cout << "[HARDWARE FATAL] Config file is missing [" << hw_link << "] list!" << endl;
                 return false;
             }
 
-            // Check if the user's value is in the allowed list
             const vector<string>& allowed = hardware_limits[hw_link];
             if (find(allowed.begin(), allowed.end(), user_value) == allowed.end()) {
                 cout << "[CONSTRAINT FAILED] '" << user_value << "' is an invalid value for " << user_key << endl;

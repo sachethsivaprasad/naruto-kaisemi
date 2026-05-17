@@ -9,14 +9,12 @@ struct ParsedCommand {
     std::unordered_map<std::string, std::string> parameters;
 };
 
-// NEW: This holds both the parameter name ("FROM") and its link ("ValidPods")
 struct ParameterRule {
     std::string name;
     std::string hardware_link;
 };
 
 struct CommandSignature {
-    // FIXED: These must be ParameterRule vectors, NOT std::string vectors
     std::vector<ParameterRule> required;
     std::vector<ParameterRule> optional;
 };
@@ -26,16 +24,10 @@ private:
     std::unordered_map<std::string, CommandSignature> valid_commands;
     std::unordered_map<std::string, std::vector<std::string>> hardware_limits;
 
-    // Helper to split "FROM:ValidPods"
     ParameterRule parse_rule(const std::string& raw_param);
 
 public:
-    // Boot Loader
     bool load_from_cfg(const std::string& filename);
-
-    // Tier 1 Validation (Grammar)
     bool validate_syntax(const ParsedCommand& cmd);
-
-    // Tier 2 Validation (Hardware Constraints)
     bool validate_constraints(const ParsedCommand& cmd);
 };

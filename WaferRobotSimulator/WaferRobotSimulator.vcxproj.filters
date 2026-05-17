@@ -21,10 +21,20 @@
     <ClCompile Include="Robot_Sim_Dispatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CommandRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RobotSimDispatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CommandRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="commands.csv" />
+    <None Include="robot.cfg" />
   </ItemGroup>
 </Project>

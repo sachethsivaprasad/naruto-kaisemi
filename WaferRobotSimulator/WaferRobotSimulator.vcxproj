@@ -127,16 +127,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandRegistry.cpp" />
     <ClCompile Include="Robot_Sim_Dispatcher.cpp" />
     <ClCompile Include="WaferRobotSimulator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandRegistry.h" />
     <ClInclude Include="RobotSimDispatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WaferRobotCommon\WaferRobotCommon.vcxproj">
       <Project>{03b29deb-afe7-433b-b076-5a99aae92bb8}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="commands.csv" />
+    <None Include="robot.cfg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

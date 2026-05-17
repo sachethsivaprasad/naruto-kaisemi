@@ -1,0 +1,7 @@
+Action,RequiredParams,OptionalParams
+PICK,FROM,ARM;SLOTS
+PLACE,TO,ARM;SLOTS
+MOVE,ARM;R;T;Z;W,
+HOME,,
+STAT,,
+CONFIG,DW,

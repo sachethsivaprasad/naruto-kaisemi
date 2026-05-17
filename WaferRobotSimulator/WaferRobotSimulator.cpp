@@ -2,6 +2,7 @@
 #include <string>
 #include "../WaferRobotCommon/RobotProtocol.h"
 #include "../WaferRobotCommon/SerialLink.h"
+#include "CommandRegistry.h"
 #include "RobotSimDispatcher.h"
 
 using namespace std;
@@ -32,7 +33,15 @@ int main(int argc, char* argv[])
         }
     }
 
+
     cout << "=== WAFER ROBOT SIMULATOR BOOTING  ===" << endl;
+
+    CommandRegistry master_registry;
+
+    if (!master_registry.load_from_cfg("robot.cfg")) {
+        cout << "CRITICAL FATAL ERROR: Could not load hardware configuration file!" << endl;
+        return -1; 
+    }
     cout << "Listening for controller frames on " << com_port << endl;
 
     while (true) {
@@ -64,6 +73,6 @@ int main(int argc, char* argv[])
             cout << "Dropping invalid frame." << endl;
         }
 
-        dispatch_server_frame(received);
+        dispatch_server_frame(received, master_registry);
     }
 }

@@ -29,5 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="commands.csv" />
+    <None Include="robot.cfg" />
   </ItemGroup>
 </Project>
