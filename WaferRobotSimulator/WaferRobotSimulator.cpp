@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "../WaferRobotCommon/RobotProtocol.h"
-#include "../WaferRobotCommon/Frame.h"
+#include "../WaferRobotCommon/SerialLink.h"
 #include "RobotSimDispatcher.h"
 
 using namespace std;

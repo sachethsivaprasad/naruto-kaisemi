@@ -18,7 +18,7 @@
     <ClCompile Include="WaferRobotController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\WaferRobotSimulator\Robot_Client_Dispatcher.cpp">
+    <ClCompile Include="Robot_Client_Dispatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

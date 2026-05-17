@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include "../WaferRobotCommon/RobotProtocol.h"
-#include "../WaferRobotCommon/Frame.h"
+#include "../WaferRobotCommon/SerialLink.h"
 using namespace std;
 
 int main(int argc, char* argv[]) {

@@ -24,7 +24,7 @@
     <ClInclude Include="RobotProtocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Frame.h">
+    <ClInclude Include="SerialLink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,7 +38,7 @@
     <ClCompile Include="RobotProtocol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Frame.cpp">
+    <ClCompile Include="SerialLink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
