@@ -5,17 +5,26 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        cout << "Usage: WaferRobotClient.exe <COM port>" << endl;
-        cout << "Example: WaferRobotClient.exe COM5" << endl;
-        return 1;
+    string com_port;
+    if (argc >= 2) {
+        com_port = argv[1];
+    }
+    else {
+        cout << "Usage: WaferRobotController.exe <COM port>" << endl;
+        cout << "Example: WaferRobotController.exe COM5" << endl;
+        cout << "Enter COM port: ";
+        getline(cin, com_port);
+
+        if (com_port.empty()) {
+            cout << "[ERROR] COM port is required." << endl;
+            return 1;
+        }
     }
 
-    string com_port = argv[1];
     int seq_counter = 100; // Start at 100
     string user_input;
 
-    cout << "=== CLIENT TERMINAL SIMULATOR ===" << endl;
+    cout << "=== CONTROLLER TERMINAL ===" << endl;
     cout << "Sending frames on " << com_port << endl;
     cout << "Type a payload to package (or type 'exit' to quit)." << endl;
     cout << "Example: PICK FROM=LPA1 ARM=LOWER" << endl;
