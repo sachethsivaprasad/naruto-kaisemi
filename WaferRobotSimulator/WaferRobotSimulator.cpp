@@ -73,6 +73,6 @@ int main(int argc, char* argv[])
             cout << "Dropping invalid frame." << endl;
         }
 
-        dispatch_server_frame(received, master_registry);
+        dispatch_server_frame(received, master_registry, com_port);
     }
 }

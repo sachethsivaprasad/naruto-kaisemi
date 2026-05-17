@@ -2,6 +2,7 @@
 #include <iostream>
 #include "../WaferRobotCommon/RobotProtocol.h"
 #include "CommandRegistry.h"
+#include "../WaferRobotCommon/SerialLink.h"
 #include <sstream>
 using namespace std;
 
@@ -23,7 +24,7 @@ ParsedCommand extract_payload(const string& payload) {
     return cmd;
 }
 
-void dispatch_server_frame(RobotFrame frame, CommandRegistry& registry) {
+void dispatch_server_frame(RobotFrame frame, CommandRegistry& registry, const string& com_port) {
 
 
     if (!frame.is_valid) {
@@ -40,12 +41,17 @@ void dispatch_server_frame(RobotFrame frame, CommandRegistry& registry) {
         ParsedCommand cmd = extract_payload(frame.payload);
         if (!registry.validate_syntax(cmd) || !registry.validate_constraints(cmd)) {
             cout << "[SERVER REJECTED] Command failed validation." << endl;
-            // TODO: Send NAK (Negative Acknowledge) back to Client
+            string nak_frame = build_robot_frame("NAK", frame.sequence_id, "");
+            string err;
+            send_robot_frame(com_port, nak_frame, err);
+            return;
             return;
         }
         cout << "[SERVER ACCEPTED] Command is physically safe to execute." << endl;
+        string ack_frame = build_robot_frame("ACK", frame.sequence_id, "");
+        string err;
+        send_robot_frame(com_port, ack_frame, err);
         // TODO: Pass the extracted action to the CSV Engine for timing
-        // TODO: Send ACK back to Client
         // TODO: Wait the duration, then send EVT (Completion) or ACK (Done)
 
     }

@@ -57,6 +57,24 @@ int main(int argc, char* argv[]) {
 
         if (send_success) {
             cout << "[SUCCESS] Frame Sent to " << com_port << endl;
+            // Switch to listening mode
+            cout << "Waiting for Simulator response..." << endl;
+            string incoming_reply;
+            string recv_error;
+
+            if (receive_robot_frame(com_port, incoming_reply, recv_error)) {
+                RobotFrame reply = parse_incoming_frame(incoming_reply);
+
+                if (reply.is_valid) {
+                    cout << "\n<<< [CONTROLLER RECEIVED] <<<" << endl;
+                    cout << "Type    : " << reply.message_type << endl;
+                    cout << "Seq ID  : " << reply.sequence_id << endl;
+                    cout << "Payload : " << reply.payload << "\n" << endl;
+                }
+            }
+        else {
+            cout << "[ERROR] Did not receive a reply: " << recv_error << endl;
+        }
         }
         else {
             cout << "[ERROR] Frame Send Failed: " << send_error << endl;
