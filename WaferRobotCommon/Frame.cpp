@@ -37,6 +37,43 @@ namespace {
 
         return message;
     }
+
+    bool configure_serial_port(HANDLE serial_handle, const string& normalized_port, string& error_message) {
+        DCB serial_config = {};
+        serial_config.DCBlength = sizeof(serial_config);
+
+        if (!GetCommState(serial_handle, &serial_config)) {
+            error_message = "Failed to read serial settings for " + normalized_port + ": " + format_windows_error(GetLastError());
+            return false;
+        }
+
+        serial_config.BaudRate = CBR_9600;
+        serial_config.ByteSize = 8;
+        serial_config.Parity = NOPARITY;
+        serial_config.StopBits = ONESTOPBIT;
+        serial_config.fOutxCtsFlow = FALSE;
+        serial_config.fOutxDsrFlow = FALSE;
+        serial_config.fDtrControl = DTR_CONTROL_DISABLE;
+        serial_config.fRtsControl = RTS_CONTROL_DISABLE;
+        serial_config.fOutX = FALSE;
+        serial_config.fInX = FALSE;
+
+        if (!SetCommState(serial_handle, &serial_config)) {
+            error_message = "Failed to configure " + normalized_port + " as 9600 8N1: " + format_windows_error(GetLastError());
+            return false;
+        }
+
+        COMMTIMEOUTS timeouts = {};
+        timeouts.WriteTotalTimeoutConstant = 1000;
+        timeouts.WriteTotalTimeoutMultiplier = 10;
+
+        if (!SetCommTimeouts(serial_handle, &timeouts)) {
+            error_message = "Failed to configure serial timeouts for " + normalized_port + ": " + format_windows_error(GetLastError());
+            return false;
+        }
+
+        return true;
+    }
 }
 
 //Frame Builder
@@ -70,38 +107,7 @@ bool send_robot_frame(const string& com_port, const string& frame, string& error
         return false;
     }
 
-    DCB serial_config = {};
-    serial_config.DCBlength = sizeof(serial_config);
-
-    if (!GetCommState(serial_handle, &serial_config)) {
-        error_message = "Failed to read serial settings for " + normalized_port + ": " + format_windows_error(GetLastError());
-        CloseHandle(serial_handle);
-        return false;
-    }
-
-    serial_config.BaudRate = CBR_9600;
-    serial_config.ByteSize = 8;
-    serial_config.Parity = NOPARITY;
-    serial_config.StopBits = ONESTOPBIT;
-    serial_config.fOutxCtsFlow = FALSE;
-    serial_config.fOutxDsrFlow = FALSE;
-    serial_config.fDtrControl = DTR_CONTROL_DISABLE;
-    serial_config.fRtsControl = RTS_CONTROL_DISABLE;
-    serial_config.fOutX = FALSE;
-    serial_config.fInX = FALSE;
-
-    if (!SetCommState(serial_handle, &serial_config)) {
-        error_message = "Failed to configure " + normalized_port + " as 9600 8N1: " + format_windows_error(GetLastError());
-        CloseHandle(serial_handle);
-        return false;
-    }
-
-    COMMTIMEOUTS timeouts = {};
-    timeouts.WriteTotalTimeoutConstant = 1000;
-    timeouts.WriteTotalTimeoutMultiplier = 10;
-
-    if (!SetCommTimeouts(serial_handle, &timeouts)) {
-        error_message = "Failed to configure write timeout for " + normalized_port + ": " + format_windows_error(GetLastError());
+    if (!configure_serial_port(serial_handle, normalized_port, error_message)) {
         CloseHandle(serial_handle);
         return false;
     }
@@ -128,4 +134,71 @@ bool send_robot_frame(const string& com_port, const string& frame, string& error
 
     CloseHandle(serial_handle);
     return true;
+}
+
+//Frame Receiver
+bool receive_robot_frame(const string& com_port, string& frame, string& error_message) {
+    frame.clear();
+    error_message.clear();
+
+    string normalized_port = normalize_com_port_name(com_port);
+    HANDLE serial_handle = CreateFileA(
+        normalized_port.c_str(),
+        GENERIC_READ,
+        0,
+        nullptr,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        nullptr);
+
+    if (serial_handle == INVALID_HANDLE_VALUE) {
+        error_message = "Failed to open " + normalized_port + ": " + format_windows_error(GetLastError());
+        return false;
+    }
+
+    if (!configure_serial_port(serial_handle, normalized_port, error_message)) {
+        CloseHandle(serial_handle);
+        return false;
+    }
+
+    bool frame_started = false;
+    char previous_byte = '\0';
+
+    while (true) {
+        char current_byte = '\0';
+        DWORD bytes_read = 0;
+        BOOL read_result = ReadFile(
+            serial_handle,
+            &current_byte,
+            1,
+            &bytes_read,
+            nullptr);
+
+        if (!read_result) {
+            error_message = "Failed to read frame from " + normalized_port + ": " + format_windows_error(GetLastError());
+            CloseHandle(serial_handle);
+            return false;
+        }
+
+        if (bytes_read == 0) {
+            continue;
+        }
+
+        if (!frame_started) {
+            if (current_byte != '\x01') {
+                continue;
+            }
+
+            frame_started = true;
+        }
+
+        frame.push_back(current_byte);
+
+        if (previous_byte == '\r' && current_byte == '\n') {
+            CloseHandle(serial_handle);
+            return true;
+        }
+
+        previous_byte = current_byte;
+    }
 }
